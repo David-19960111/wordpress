@@ -243,7 +243,7 @@ module "rds" {
   source = "./infraestructure/modules/relational_database"
 
   #Config parameters
-  db_name           = "travelapprds"
+  db_name           = "travelapps"
   db_identifier        = "travelapp-identifier"
   db_username       = ""
   db_password       = ""
