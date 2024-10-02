@@ -48,10 +48,12 @@ output "public_subnet_id" {
 
 output "private_subnet_db_id" {
   value = module.vpc.private_subnet_db_id
+  sensitive = true 
 }
 
 output "private_subnet_id" {
   value = module.vpc.private_subnet_id
+  sensitive = true 
 }
 
 #Relational DataBase

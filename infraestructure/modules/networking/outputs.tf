@@ -9,8 +9,10 @@ output "public_subnet_id" {
 
 output "private_subnet_db_id" {
   value = aws_subnet.private_db_subnets.*.id
+  sensitive = true
 }
 
 output "private_subnet_id" {
   value = aws_subnet.private_subnets.*.id
+  sensitive = true 
 }
