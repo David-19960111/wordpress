@@ -12,5 +12,5 @@ resource "aws_ssm_parameter" "main" {
 }
 
 data "sops_file" "sops_secret" {
-  source_file = "./ssm.enc.json"
+  source_file = "./secrets.enc.json"
 }
