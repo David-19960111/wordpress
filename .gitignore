@@ -3,4 +3,3 @@
 *.tfstate
 *.tfstate.backup
 wordpress.pem 
-secrets.json 
