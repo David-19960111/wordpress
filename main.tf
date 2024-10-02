@@ -238,6 +238,10 @@ module "efs_sg" {
   sg_name_tag = "sg-tag"
 }
 
+module "ssm_sops" {
+  source = "./infraestructure/modules/systems_manager_sops"
+}
+
 #Database
 module "rds" {
   source = "./infraestructure/modules/relational_database"
@@ -245,8 +249,8 @@ module "rds" {
   #Config parameters
   db_name           = "travelapps"
   db_identifier        = "travelapp-identifier"
-  db_username       = ""
-  db_password       = ""
+  db_username       = module.ssm_sops.DB_USERNAME_SOPS
+  db_password       = module.ssm_sops.DB_PASSWORD_SOPS
   db_engine            = "mysql"
   db_engine_version        = "8.0.33"
   db_instance_class    = "db.t3.micro"

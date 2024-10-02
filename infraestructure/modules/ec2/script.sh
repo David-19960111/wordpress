@@ -24,8 +24,8 @@ sudo wget https://wordpress.org/latest.tar.gz
 sudo tar -xzf latest.tar.gz
 sudo cp -r wordpress/* /var/www/html/
 sudo cp /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
-sudo sed -i "s/database_name_here/${aws_db_instance.main.db_name}/g" /var/www/html/wp-config.php
-sudo sed -i "s/username_here/${aws_db_instance.main.username}/g" /var/www/html/wp-config.php
+sudo sed -i "s/database_name_here/${aws_db_instance.my_db.db_name}/g" /var/www/html/wp-config.php
+sudo sed -i "s/username_here/${aws_db_instance.my_db.username}/g" /var/www/html/wp-config.php
 sudo sed -i "s/password_here/Loki7476/g" /var/www/html/wp-config.php
-sudo sed -i "s/localhost/${aws_db_instance.main.endpoint}/g" /var/www/html/wp-config.php
+sudo sed -i "s/localhost/${aws_db_instance.my_db.endpoint}/g" /var/www/html/wp-config.php
 sudo service httpd restart
