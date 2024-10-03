@@ -84,7 +84,7 @@ module "asg" {
 module "alb_public_sg" {
   source  = "./infraestructure/modules/security_groups"
   vpc_id  = module.vpc.vpc_id
-  sg_name = "wordpress-public-sg"
+  sg_name = "wordpress-public-sg-alb"
 
   sg_ingress = {
     rule-1 = {
