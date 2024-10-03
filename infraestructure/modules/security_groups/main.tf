@@ -18,7 +18,6 @@ resource "aws_security_group" "main" {
     for_each = var.sg_egress
 
     content {
-    description = egress.value.description
     from_port = egress.value.from_port 
     to_port = egress.value.to_port
     protocol = egress.value.protocol

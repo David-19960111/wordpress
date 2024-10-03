@@ -1,5 +1,6 @@
 variable "region" {
   description = "variable for project wordpress"
+  type        = string
   default     = false
 }
 
@@ -63,13 +64,13 @@ variable "route_table_tag" {
 variable "vpc_id" {
   type        = string
   description = "VPC ID"
-  default = null 
+  default     = null
 }
 
 variable "sg_name" {
   type        = string
   description = "Security group name"
-  default = null
+  default     = null
 }
 
 variable "sg_ingress" {
@@ -130,14 +131,19 @@ variable "lb_listner_protocol" {
   default = null
 }
 
+variable "lb_tg_att_target_id" {
+  type = string
+  default = null
+}
+
 variable "security_group_alb" {
-  type = list(string)
-  default = [] 
-} 
+  type    = list(string)
+  default = []
+}
 
 
 variable "subnets_public_alb" {
-  type = list(string)
+  type    = list(string)
   default = []
 }
 
@@ -154,17 +160,17 @@ variable "db_engine_version" {
 
 variable "db_name" {
   type    = string
-  default = null 
+  default = null
 }
 
 variable "db_storage_type" {
   type    = string
-  default = null 
+  default = null
 }
 
 variable "db_allocated_storage" {
   type    = number
-  default = null 
+  default = null
 }
 
 variable "db_identifier" {
@@ -179,32 +185,32 @@ variable "db_username" {
 
 variable "db_password" {
   type    = string
-  default = null 
+  default = null
 }
 
 variable "db_instance_class" {
   type    = string
-  default = null 
+  default = null
 }
 
 variable "db_availability_zone" {
   type    = string
-  default = null 
+  default = null
 }
 
 variable "db_subnet_group_name" {
   type    = string
-  default = null 
+  default = null
 }
 
 variable "vpc_security_group_ids" {
-  type = any
+  type        = list(string)
   description = "List of VPC SG's."
-  default = []
+  default     = []
 }
 
 variable "subnet_ids" {
-  type        = any
+  type        = list(string)
   description = "A list of VPC subnet IDs."
   default     = []
 }
@@ -226,17 +232,17 @@ variable "efs_throughput_mode" {
 }
 
 variable "tag_efs" {
-  type = string
+  type    = string
   default = null
 }
 
 variable "efs_var_sg_one" {
-  type = list(string)
-  default =[ ]
+  type    = list(string)
+  default = []
 }
 
 variable "efs_subnets_data" {
-  type = list(string)
+  type    = list(string)
   default = []
 }
 
@@ -263,92 +269,92 @@ variable "asg_name" {
 
 variable "asg_health_check_type" {
   type    = string
-  default = null 
+  default = null
 }
 
 variable "security_group_asg_public" {
-  type = list(string)
-  default = [ ] 
+  type    = list(string)
+  default = []
 }
 
 variable "key_name" {
-  type = string
+  type    = string
   default = null
 }
 
 variable "ami_id" {
-  type = string
+  type    = string
   default = null
 }
 
 variable "root_block_device_volume_size" {
-  type = number
+  type    = number
   default = null
 }
 
 variable "root_block_device_encrypted" {
-  type = bool
+  type    = bool
   default = false
 }
 
 variable "ebs_block_device_encrypted" {
-  type = bool
+  type    = bool
   default = false
 }
 
 variable "ebs_block_device_volume_size" {
-  type = number
+  type    = number
   default = null
 }
 
 variable "asg_health_check_grace_period" {
-  type = number
-  default = null 
+  type    = number
+  default = null
 }
 
 variable "asg_max_size" {
-  type = number
-  default = null 
+  type    = number
+  default = null
 }
 
 variable "asg_min_size" {
-  type = number
-  default = null  
+  type    = number
+  default = null
 }
 
 variable "asg_desired_capacity" {
-  type = number
-  default = null 
+  type    = number
+  default = null
 }
 
 variable "tag_name" {
-  type = string
+  type    = string
   default = null
 }
 
 variable "tag_value" {
-  type = string
+  type    = string
   default = null
 }
 
 variable "tag_propagate_at_launch" {
-  type = bool
-  default = false 
+  type    = bool
+  default = false
 }
 
 variable "vpc_zone" {
-  type = string
-  default = null 
+  type    = list(string)
+  default = null
 }
 
 variable "alb_id" {
-  type = string
-  default = null 
+  type    = string
+  default = null
 }
 
 variable "target_group" {
-  type = string
-  default = null 
+  type    = string
+  default = null
 }
 
 #Elastic cloud computing 
@@ -363,31 +369,31 @@ variable "instance_type" {
 }
 
 variable "security_group_ec2_public" {
-  type = list(string)
-  default = [ ]
+  type    = list(string)
+  default = []
 }
 
 variable "security_group_ec2_public_bastion" {
-  type = list(string)
-  default = [ ]
+  type    = list(string)
+  default = []
 }
 
 variable "depens_on_ec2_var" {
-  type = list(string)
-  default = [ ]
+  type    = list(string)
+  default = []
 }
 
 variable "public_subnets_ec2" {
-  type = string
-  default = null
+  type    = list(string)
+  default = []
 }
 
 variable "private_subnets_ec2" {
-  type = string
-  default = null 
+  type    = list(string)
+  default = []
 }
 
 variable "depends_on_ec2" {
-  type = list(string)
-  default = [ ]
+  type    = list(string)
+  default = []
 }

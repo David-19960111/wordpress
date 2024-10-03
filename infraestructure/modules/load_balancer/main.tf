@@ -25,7 +25,7 @@ resource "aws_lb_target_group" "my_alb_tg" {
 
 resource "aws_lb_target_group_attachment" "main" {
   target_group_arn = aws_lb_target_group.my_alb_tg.arn
-  target_id = ""
+  target_id = var.lb_tg_att_target_id
 }
 
 resource "aws_lb_listener" "my_alb_listner" {

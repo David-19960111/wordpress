@@ -8,7 +8,7 @@ terraform {
 }
 
 provider "aws" {
-  region = var.region
+  region = "us-east-2"
 }
 
 module "vpc" {
@@ -37,7 +37,7 @@ module "vpc" {
 module "load_balancer" {
   source = "./infraestructure/modules/load_balancer"
 
-  lb_name               = "my_lb"
+  lb_name               = "my-lb"
   lb_load_balancer_type = "application"
   lb_ip_address_type    = "ipv4"
   lb_tg_name            = "my-alb-tg"
@@ -46,36 +46,37 @@ module "load_balancer" {
   lb_tg_target_type     = "instance"
   lb_listner_port       = 80
   lb_listner_protocol   = "HTTP"
+  lb_tg_att_target_id = module.ec2.instance_public_ip 
   vpc_id                = module.vpc.vpc_id
-  security_group_alb = [ module.webserver_public_sg.security_group_id, module.ssh_sg.security_group_id, module.alb_public_sg.security_group_id]
-  subnets_public_alb = module.vpc.public_subnet_id
+  security_group_alb    = [module.webserver_public_sg.security_group_id, module.ssh_sg.security_group_id, module.alb_public_sg.security_group_id]
+  subnets_public_alb    = module.vpc.public_subnet_id
 }
 
 module "asg" {
   source = "./infraestructure/modules/auto_scaling_group"
 
-  launch_conf_name = "webserver_launch_config"
-  launch_conf_instance_type = "t2.micro"
-  launch_conf_volume_type = "gp2"
-  asg_name = "myasg"
-  asg_health_check_type = "ELB"
-  security_group_asg_public = [ module.webserver_public_sg.security_group_id, module.ssh_sg.security_group_id  ]
-  key_name = "Wordpress"
-  ami_id = "ami-037774efca2da0726"
+  launch_conf_name              = "webserver_launch_config"
+  launch_conf_instance_type     = "t2.micro"
+  launch_conf_volume_type       = "gp2"
+  asg_name                      = "myasg"
+  asg_health_check_type         = "ALB"
+  security_group_asg_public     = [module.webserver_public_sg.security_group_id, module.ssh_sg.security_group_id]
+  key_name                      = "Wordpress"
+  ami_id                        = "ami-037774efca2da0726"
   root_block_device_volume_size = 10
-  root_block_device_encrypted = true
-  ebs_block_device_volume_size = 5
-  ebs_block_device_encrypted = true 
+  root_block_device_encrypted   = true
+  ebs_block_device_volume_size  = 5
+  ebs_block_device_encrypted    = true
   asg_health_check_grace_period = 300
-  asg_max_size = 4
-  asg_min_size = 1
-  asg_desired_capacity = 2
-  tag_name = "asg_webserver"
-  tag_value = "my_asg"
-  tag_propagate_at_launch = true 
+  asg_max_size                  = 4
+  asg_min_size                  = 1
+  asg_desired_capacity          = 2
+  tag_name                      = "asg_webserver"
+  tag_value                     = "my_asg"
+  tag_propagate_at_launch       = true
 
-  vpc_zone = module.vpc.private_subnet_id
-  alb_id = module.load_balancer.alb_zone_id
+  vpc_zone = element(module.vpc.private_subnet_id, 0)
+  alb_id       = module.load_balancer.alb_zone_id
   target_group = module.load_balancer.alb_tg_arn
 }
 
@@ -247,19 +248,19 @@ module "rds" {
   source = "./infraestructure/modules/relational_database"
 
   #Config parameters
-  db_name           = "travelapps"
+  db_name              = "travelapps"
   db_identifier        = "travelapp-identifier"
-  db_username       = module.ssm_sops.DB_USERNAME_SOPS
-  db_password       = module.ssm_sops.DB_PASSWORD_SOPS
+  db_username          = module.ssm_sops.DB_USERNAME_SOPS
+  db_password          = module.ssm_sops.DB_PASSWORD_SOPS
   db_engine            = "mysql"
-  db_engine_version        = "8.0.33"
+  db_engine_version    = "8.0.33"
   db_instance_class    = "db.t3.micro"
   db_allocated_storage = 20
-  db_storage_type = "gp2"
+  db_storage_type      = "gp2"
 
   #Networking parameters
   subnet_ids             = module.vpc.public_subnet_id
-  vpc_security_group_ids = module.rds_sg.security_group_id
+  vpc_security_group_ids = [module.rds_sg.security_group_id]
 
   #DB subnet group
   db_subnet_group_name = "wordpress-group"
@@ -269,13 +270,13 @@ module "rds" {
 
 module "efs" {
   source = "./infraestructure/modules/elastic_fyle_systems"
-  
-  efs_creation_token = "efs"
+
+  efs_creation_token   = "efs"
   efs_performance_mode = "generalPurpose"
-  efs_throughput_mode = "elastic"
-  tag_efs = "efs_for_wordpress"
-  efs_var_sg_one = [module.efs_sg.security_group_id, module.alb_public_sg.security_group_id, module.rds_sg.security_group_id]
-  efs_subnets_data = module.vpc.private_subnet_db_id
+  efs_throughput_mode  = "elastic"
+  tag_efs              = "efs_for_wordpress"
+  efs_var_sg_one       = [module.efs_sg.security_group_id, module.alb_public_sg.security_group_id, module.rds_sg.security_group_id]
+  efs_subnets_data     = module.vpc.private_subnet_db_id
 }
 
 #Elastic computing cloud 
@@ -283,13 +284,13 @@ module "efs" {
 module "ec2" {
   source = "./infraestructure/modules/ec2"
 
-  ami = "ami-037774efca2da0726"
-  instance_type = "t2.micro"
-  key_name = "wordpress"
-  security_group_ec2_public = [ module.alb_public_sg.security_group_id, module.webserver_public_sg.security_group_id, module.ssh_sg.security_group_id ]
-  security_group_ec2_public_bastion = [  module.webserver_public_sg.security_group_id, module.ssh_sg.security_group_id ]
-  depens_on_ec2_var = [  ]
-  public_subnets_ec2 = module.vpc.public_subnet_id
-  private_subnets_ec2 = module.vpc.private_subnet_id
-  depends_on_ec2 = [ module.efs.efs_id, module.rds.rds_db_hostname ]
+  ami                               = "ami-037774efca2da0726"
+  instance_type                     = "t2.micro"
+  key_name                          = "wordpress"
+  security_group_ec2_public         = [module.alb_public_sg.security_group_id, module.webserver_public_sg.security_group_id, module.ssh_sg.security_group_id]
+  security_group_ec2_public_bastion = [module.webserver_public_sg.security_group_id, module.ssh_sg.security_group_id]
+  depens_on_ec2_var                 = []
+  public_subnets_ec2 = element(module.vpc.public_subnet_id, 0)
+  private_subnets_ec2               = element(module.vpc.private_subnet_id, 0)
+  depends_on_ec2                    = [module.efs.efs_id, module.rds.rds_db_hostname]
 }

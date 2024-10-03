@@ -19,7 +19,7 @@ variable "asg_name" {
 }
 
 variable "asg_health_check_type" {
-  type    = string
+  type    = string 
   default = null 
 }
 

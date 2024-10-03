@@ -49,13 +49,13 @@ variable "db_subnet_group_name" {
 }
 
 variable "vpc_security_group_ids" {
-  type = any
+  type = list(string)
   description = "List of VPC SG's."
   default = []
 }
 
 variable "subnet_ids" {
-  type        = any
+  type        = list(string)
   description = "A list of VPC subnet IDs."
   default     = []
 }

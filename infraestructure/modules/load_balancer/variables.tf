@@ -43,6 +43,11 @@ variable "lb_listner_protocol" {
   default = null 
 }
 
+variable "lb_tg_att_target_id" {
+  type = string
+  default = null
+}
+
 variable "vpc_id" {
   type        = string
   description = "VPC ID"
